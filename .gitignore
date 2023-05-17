@@ -1,3 +1,6 @@
+/Client/bin/
+/Server/bin/
+
 # Prerequisites
 *.d
 
