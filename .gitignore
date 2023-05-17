@@ -1,5 +1,4 @@
-/Client/bin/
-/Server/bin/
+/bin
 
 # Prerequisites
 *.d
