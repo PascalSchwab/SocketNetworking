@@ -26,22 +26,16 @@ enum ProtocolFamily{
 
 class Socket{
     public:
-        Socket(int port, SocketType socketType = TCP, ProtocolFamily family = IPV4);
+        Socket(int port, SocketType socketType, ProtocolFamily family);
         ~Socket();
-        int Listen(void (*callbackFunc)(string message), int queueClientSize = 3);
-        int Connect();
-        int SendMessage(string message);
-        int GetSocket() const { return m_Socket; }
         int GetPort() const {return m_Port;}
         SocketType GetSocketType() const {return m_SocketType;}
         ProtocolFamily GetProtocolFamily() const {return m_ProtocolFamily;}
-        const struct sockaddr_in* GetAddress() const { return m_Address; } 
-    private:
+        int SendMessage(int socket, string message);
+    protected:
         int CreateSocket();
         int CreateAddress(const char* ipAddress = NULL);
-        void AcceptConnections(void (*callbackFunc)(string message));
-        static void HandleCLient(int clientSocket, vector<int> &clientSockets, void (*callbackFunc)(string message));
-    private:
+    protected:
         int m_Socket;
         int m_Port;
         SocketType m_SocketType;

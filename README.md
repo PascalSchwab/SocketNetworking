@@ -1,16 +1,16 @@
 # SocketNetworking
     Library for Socket Programming in C++
 # Server
-    #include "socket.h"
-    
-    void callback(string message){
-        std::cout << message << std::endl;
+    #include "server.h"
+
+    void callbackFunc(string message){
+        cout << message << endl;
     }
-    
+
     int main(){
-        Socket socket(8080);
-        
-        if(socket.Listen(callback) == 1){
+        Server server(8080, callbackFunc);
+
+        if(server.Start() == 1){
             exit(1);
         }
         
@@ -18,18 +18,16 @@
     }
 
 # Client
-    #include "socket.h"
-    
+    #include "client.h"
+
     int main(){
-        Socket socket(8080);
-        
-        if(socket.Connect() == 1){
+        Client client(8080, "127.0.0.1");
+
+        if(client.Connect() == 1){
             exit(1);
         }
-        
-        if(socket.SendMessage("Hello World") == 1){
-            exit(1);
-        }
-        
+
+        client.SendMessage("Hello World");
+
         return 0;
     }
