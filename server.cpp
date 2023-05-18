@@ -8,7 +8,7 @@
  * @param ProtocolFamily IPv4, IPv6 or Bluetooth (Default: IPv4)
  * @param int Count, how much clients are allowed to wait in the acception queue (Default: 3)
 */
-Server::Server(int port, void (*callbackFunc)(struct RecievedMessage* message), SocketType socketType, ProtocolFamily family, int queueClientSize) : Socket(port, socketType, family){
+Server::Server(int port, void (*callbackFunc)(struct RecievedMessage* recievedMessage), SocketType socketType, ProtocolFamily family, int queueClientSize) : Socket(port, socketType, family){
     this->callbackFunc = callbackFunc;
     this->m_QueueCLientSize = queueClientSize;
 }
@@ -86,7 +86,7 @@ void Server::AcceptConnections(){
  * @param vector<ServerClient*> client list
  * @param void*()(RecievedMessage*) Callback function
 */
-void Server::HandleClient(struct ServerClient* &client, vector<struct ServerClient*> &serverClients, void(*callbackFunc)(struct RecievedMessage* message)){
+void Server::HandleClient(struct ServerClient* &client, vector<struct ServerClient*> &serverClients, void(*callbackFunc)(struct RecievedMessage* recievedMessage)){
     char message[1024] = {0};
     
     // Recieve message from client

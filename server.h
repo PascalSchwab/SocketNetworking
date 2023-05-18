@@ -26,15 +26,15 @@ struct RecievedMessage{
 class Server : Socket{
     public:
         // Callback Function, when message arrived @param RecievedMessage* Recieved message
-        void (*callbackFunc)(struct RecievedMessage* message);
+        void (*callbackFunc)(struct RecievedMessage* recievedMessage);
     public:
-        Server(int port, void (*callbackFunc)(struct RecievedMessage* message), SocketType socketType = TCP, ProtocolFamily family = IPV4, int queueClientSize = 3);
+        Server(int port, void (*callbackFunc)(struct RecievedMessage* recievedMessage), SocketType socketType = TCP, ProtocolFamily family = IPV4, int queueClientSize = 3);
         ~Server();
         int Start();
-        static void call(struct RecievedMessage* message);
+        static void call(struct RecievedMessage* recievedMessage);
     private:
         void AcceptConnections();
-        static void HandleClient(struct ServerClient* &client, vector<struct ServerClient*> &serverClients, void(*callbackFunc)(struct RecievedMessage* message));
+        static void HandleClient(struct ServerClient* &client, vector<struct ServerClient*> &serverClients, void(*callbackFunc)(struct RecievedMessage* recievedMessage));
     private:
         int m_QueueCLientSize;
         vector<struct ServerClient*> m_ServerClients;

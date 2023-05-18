@@ -1,7 +1,7 @@
 #include "server.h"
 
-void callbackFunc(struct RecievedMessage* message){
-    cout << message->message << endl;
+void callbackFunc(struct RecievedMessage* recievedMessage){
+    cout << "Message: \"" << recievedMessage->message << "\" from " << recievedMessage->client->address << endl;
 }
 
 int main(){
