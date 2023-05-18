@@ -3,7 +3,7 @@
 /**
  * Constructor
  * @param int Port
- * @param void*()(struct RecievedMessage*) Callback function
+ * @param void*()(RecievedMessage*) Callback function
  * @param SocketType TCP or UDP (Default: TCP)
  * @param ProtocolFamily IPv4, IPv6 or Bluetooth (Default: IPv4)
  * @param int Count, how much clients are allowed to wait in the acception queue (Default: 3)
@@ -75,18 +75,18 @@ void Server::AcceptConnections(){
         this->m_ServerClients.push_back(serverClient);
 
         // Open new thread for client
-        // thread t(HandleCLient, clientSocket, ref(this->m_ServerClients), this->callbackFunc);
-        // t.detach();
+        thread t(HandleClient, ref(serverClient), ref(this->m_ServerClients), this->callbackFunc);
+        t.detach();
     }
 }
 
 /**
  * Handles new client in own thread (Recieve messages and call callback function)
- * @param struct ServerClient* Client socket
- * @param vector<struct ServerClient*> client list
- * @param void*()(struct RecievedMessage*) Callback function
+ * @param ServerClient* Client socket
+ * @param vector<ServerClient*> client list
+ * @param void*()(RecievedMessage*) Callback function
 */
-void Server::HandleCLient(struct ServerClient* client, vector<struct ServerClient*> &serverClients, void (*callbackFunc)(struct RecievedMessage* message)){
+void Server::HandleClient(struct ServerClient* &client, vector<struct ServerClient*> &serverClients, void(*callbackFunc)(struct RecievedMessage* message)){
     char message[1024] = {0};
     
     // Recieve message from client
@@ -95,12 +95,13 @@ void Server::HandleCLient(struct ServerClient* client, vector<struct ServerClien
         cerr << "Failed to revcieve message from client" << endl;
     }
     else{
-        // struct RecievedMessage* recievedMessage = (struct RecievedMessage*)malloc(sizeof(struct RecievedMessage));
-        // recievedMessage->client = client;
-        // recievedMessage->message = message;
-        // callbackFunc(recievedMessage);
-        // memset(message, 0, sizeof(message));
-        // free(recievedMessage);
+        // Call callback function
+        struct RecievedMessage* recievedMessage = (struct RecievedMessage*)malloc(sizeof(struct RecievedMessage));
+        recievedMessage->client = client;
+        recievedMessage->message = message;
+        callbackFunc(recievedMessage);
+        memset(message, 0, sizeof(message));
+        free(recievedMessage);
     }
 
     // Remove Client Socket
