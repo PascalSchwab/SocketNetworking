@@ -1,10 +1,22 @@
 #include "server.h"
 
+/**
+ * Constructor
+ * @param int Port
+ * @param void*()(std::string) Callback function
+ * @param SocketType TCP or UDP (Default: TCP)
+ * @param ProtocolFamily IPv4, IPv6 or Bluetooth (Default: IPv4)
+ * @param int Count, how much clients are allowed to wait in the acception queue (Default: 3)
+*/
 Server::Server(int port, void (*callbackFunc)(string message), SocketType socketType, ProtocolFamily family, int queueClientSize) : Socket(port, socketType, family){
     this->callbackFunc = callbackFunc;
     this->m_QueueCLientSize = queueClientSize;
 }
 
+/**
+ * Starts the server (Create socket, Bind address, Listen on socket, Accept connections)
+ * @return int (0 = Created; 1 = Failed)
+*/
 int Server::Start(){
     // Create socket
     if(CreateSocket() == 1){
@@ -40,9 +52,12 @@ int Server::Start(){
     return 0;
 }
 
-// Accept incoming connections
+/**
+ * Accept incoming connections and opens for each client a thread
+*/
 void Server::AcceptConnections(){
     while(true){
+        // Add incoming client to client list
         struct sockaddr_in clientAddress;
         socklen_t clientAddressLen = sizeof(clientAddress);
         int clientSocket = accept(this->m_Socket, (struct sockaddr*)&clientAddress, &clientAddressLen);
@@ -52,11 +67,18 @@ void Server::AcceptConnections(){
         }
         this->m_ClientSockets.push_back(clientSocket);
 
+        // Open new thread for client
         thread t(HandleCLient, clientSocket, ref(this->m_ClientSockets), this->callbackFunc);
         t.detach();
     }
 }
 
+/**
+ * Handles new client in own thread (Recieve messages and call callback function)
+ * @param int Client socket
+ * @param vector<int> client list
+ * @param void*()(std::string) Callback function
+*/
 void Server::HandleCLient(int clientSocket, vector<int> &clientSockets, void (*callbackFunc)(string message)){
     char message[1024] = {0};
     

@@ -3,8 +3,13 @@
 
 #include "socket.h"
 
+/*
+    Server, which listens on a specific port and clients can send messages to it.
+    Server decides with a callback function what should be done with a message 
+*/
 class Server : Socket{
     public:
+        // Callback Function, when message arrived @param std::string Arrived message
         void (*callbackFunc)(string message);
     public:
         Server(int port, void (*callbackFunc)(string message), SocketType socketType = TCP, ProtocolFamily family = IPV4, int queueClientSize = 3);

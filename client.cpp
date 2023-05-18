@@ -1,9 +1,20 @@
 #include "client.h"
 
+/**
+ * Constructor
+ * @param int Port
+ * @param std::string Server address
+ * @param SocketType TCP or UDP (Default: TCP)
+ * @param ProtocolFamily IPv4, IPv6 or Bluetooth (Default: IPv4)
+*/
 Client::Client(int port, string serverAddress, SocketType socketType, ProtocolFamily family) : Socket(port, socketType, family){
     this->m_ServerAddress = serverAddress;
 }
 
+/**
+ * Connect to server (Create socket, Create address, Connect to address)
+ * @return int (0 = Created; 1 = Failed)
+*/
 int Client::Connect(){
     // Create socket
     if(CreateSocket() == 1){
@@ -30,6 +41,10 @@ int Client::Connect(){
     return 0;
 }
 
+/**
+ * Sends message to server (override)
+ * @return int (0 = Created; 1 = Failed)
+*/
 int Client::SendMessage(string message){
     int send = Socket::SendMessage(this->m_Socket, message);
     if(send != 1){
