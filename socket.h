@@ -41,7 +41,7 @@ class Socket{
         int SendMessage(int socket, string message);
     protected:
         int CreateSocket();
-        int CreateAddress(string ipAdress = NULL);
+        int CreateAddress(const char* ipAdress = NULL);
     protected:
         int m_Socket;
         int m_Port;

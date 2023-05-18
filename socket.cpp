@@ -31,18 +31,18 @@ int Socket::CreateSocket(){
  * @param std::string IP-Address of the Server (Default: NULL)
  * @return int (0 = Created; 1 = Failed)
 */
-int Socket::CreateAddress(string ipAddress){
+int Socket::CreateAddress(const char* ipAddress){
     struct sockaddr_in* address = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
     address->sin_port = htons(this->m_Port);
     address->sin_family = this->m_ProtocolFamily;
 
     // IP-Address is empty -> Server
-    if(ipAddress.empty()){
+    if(ipAddress == NULL){
         address->sin_addr.s_addr = INADDR_ANY;
     }
     else{
         // IP-Address not empty -> Client and convert to IPv6
-        if(inet_pton(this->m_ProtocolFamily, ipAddress.c_str(), &address->sin_addr) <= 0){
+        if(inet_pton(this->m_ProtocolFamily, ipAddress, &address->sin_addr) <= 0){
             cerr << "Invalid address. Address creation failed" << endl;
             return 1;
         }
@@ -68,7 +68,5 @@ int Socket::SendMessage(int socket, string message){
 
 // Close Socket, when deconstructed
 Socket::~Socket(){
-    void *address = (void*)this->m_Address;
     close(this->m_Socket);
-    free(address);
 }

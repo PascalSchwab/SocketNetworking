@@ -75,8 +75,8 @@ void Server::AcceptConnections(){
         this->m_ServerClients.push_back(serverClient);
 
         // Open new thread for client
-        thread t(HandleCLient, clientSocket, ref(this->m_ServerClients), this->callbackFunc);
-        t.detach();
+        // thread t(HandleCLient, clientSocket, ref(this->m_ServerClients), this->callbackFunc);
+        // t.detach();
     }
 }
 
