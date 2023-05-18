@@ -3,12 +3,12 @@
 /**
  * Constructor
  * @param int Port
- * @param void*()(std::string) Callback function
+ * @param void*()(struct RecievedMessage*) Callback function
  * @param SocketType TCP or UDP (Default: TCP)
  * @param ProtocolFamily IPv4, IPv6 or Bluetooth (Default: IPv4)
  * @param int Count, how much clients are allowed to wait in the acception queue (Default: 3)
 */
-Server::Server(int port, void (*callbackFunc)(string message), SocketType socketType, ProtocolFamily family, int queueClientSize) : Socket(port, socketType, family){
+Server::Server(int port, void (*callbackFunc)(struct RecievedMessage* message), SocketType socketType, ProtocolFamily family, int queueClientSize) : Socket(port, socketType, family){
     this->callbackFunc = callbackFunc;
     this->m_QueueCLientSize = queueClientSize;
 }
@@ -65,39 +65,52 @@ void Server::AcceptConnections(){
             cerr << "Can't accept incoming client connection" << endl;
             break;
         }
-        this->m_ClientSockets.push_back(clientSocket);
+
+        // Create Server client
+        struct ServerClient* serverClient = (struct ServerClient*) malloc(sizeof(struct ServerClient));
+        serverClient->socket = clientSocket;
+        char* clientIp = inet_ntoa(clientAddress.sin_addr);
+        serverClient->address = clientIp;
+
+        this->m_ServerClients.push_back(serverClient);
 
         // Open new thread for client
-        thread t(HandleCLient, clientSocket, ref(this->m_ClientSockets), this->callbackFunc);
+        thread t(HandleCLient, clientSocket, ref(this->m_ServerClients), this->callbackFunc);
         t.detach();
     }
 }
 
 /**
  * Handles new client in own thread (Recieve messages and call callback function)
- * @param int Client socket
- * @param vector<int> client list
- * @param void*()(std::string) Callback function
+ * @param struct ServerClient* Client socket
+ * @param vector<struct ServerClient*> client list
+ * @param void*()(struct RecievedMessage*) Callback function
 */
-void Server::HandleCLient(int clientSocket, vector<int> &clientSockets, void (*callbackFunc)(string message)){
+void Server::HandleCLient(struct ServerClient* client, vector<struct ServerClient*> &serverClients, void (*callbackFunc)(struct RecievedMessage* message)){
     char message[1024] = {0};
     
     // Recieve message from client
-    int recieve = recv(clientSocket, message, 1024, 0);
+    int recieve = recv(client->socket, message, 1024, 0);
     if(recieve == -1){
         cerr << "Failed to revcieve message from client" << endl;
     }
     else{
-        callbackFunc(message);
-        memset(message, 0, sizeof(message));
+        // struct RecievedMessage* recievedMessage = (struct RecievedMessage*)malloc(sizeof(struct RecievedMessage));
+        // recievedMessage->client = client;
+        // recievedMessage->message = message;
+        // callbackFunc(recievedMessage);
+        // memset(message, 0, sizeof(message));
+        // free(recievedMessage);
     }
 
     // Remove Client Socket
-    auto it = find(clientSockets.begin(), clientSockets.end(), clientSocket);
-    if(it != clientSockets.end()){
-        clientSockets.erase(it);
+    auto it = find(serverClients.begin(), serverClients.end(), client);
+    if(it != serverClients.end()){
+        serverClients.erase(it);
     }
-    close(clientSocket);
+
+    close(client->socket);
+    free(client);
 }
 
 Server::~Server(){

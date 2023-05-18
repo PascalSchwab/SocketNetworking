@@ -1,7 +1,7 @@
 #include "server.h"
 
-void callbackFunc(string message){
-    cout << message << endl;
+void callbackFunc(struct RecievedMessage* message){
+    cout << message->message << endl;
 }
 
 int main(){

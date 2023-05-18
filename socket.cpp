@@ -68,5 +68,7 @@ int Socket::SendMessage(int socket, string message){
 
 // Close Socket, when deconstructed
 Socket::~Socket(){
+    void *address = (void*)this->m_Address;
     close(this->m_Socket);
+    free(address);
 }
