@@ -76,17 +76,6 @@ int Socket::SendMessage(string message){
 
 void Socket::HandleCLient(int clientSocket, vector<int> &clientSockets, void (*callbackFunc)(string message)){
     char message[1024] = {0};
-
-    // while(true){
-    //     // Recieve message from client
-    //     int recieve = recv(clientSocket, message, 1024, 0);
-    //     if(recieve == -1){
-    //         cerr << "Failed to revcieve message from client" << endl;
-    //         break;
-    //     }
-    //     callbackFunc(message);
-    //     memset(message, 0, sizeof(message));
-    // }
     
     // Recieve message from client
     int recieve = recv(clientSocket, message, 1024, 0);

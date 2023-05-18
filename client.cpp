@@ -7,7 +7,7 @@ int main(){
     if(socket.Connect() == 1){
         exit(1);
     }
-    if(socket.SendMessage("Moin") == 1){
+    if(socket.SendMessage("Hello World") == 1){
         exit(1);
     }
     return 0;
