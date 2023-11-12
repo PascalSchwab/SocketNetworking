@@ -6,26 +6,21 @@
 #define MAX_CLIENTS 10
 
 typedef struct{
-    int socketfd;
-    struct sockaddr_in *p_address;
-} Server;
-
-typedef struct{
-    Server *p_server;
+    Socket *p_server;
     int socketfd;
     void (*callbackFunc)(char*);
 }ServerClient;
 
-Server* CreateServer(int port, SocketType type, ProtocolFamily family);
+Socket* CreateServer(int port, SocketType type, ProtocolFamily family);
 
-void BindServerSocket(Server *p_server);
+void BindServerSocket(Socket *p_server);
 
-void SetServerOptions(Server *p_server);
+void SetServerOptions(Socket *p_server);
 
-void ListenServer(Server *p_server, void (*callbackFunc)(char*));
+void ListenServer(Socket *p_server, void (*callbackFunc)(char*));
 
 void* HandleClient(void *p);
 
-void DisposeServer(Server *p_server);
+void DisposeServer(Socket *p_server);
 
 #endif

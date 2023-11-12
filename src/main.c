@@ -7,7 +7,7 @@ void printMessage(char* message){
 }
 
 void StartServer(){
-    Server *p_server = CreateServer(PORT, TCP, IPV4);
+    Socket *p_server = CreateServer(PORT, TCP, IPV4);
     SetServerOptions(p_server);
     BindServerSocket(p_server);
     ListenServer(p_server, printMessage);
@@ -15,9 +15,9 @@ void StartServer(){
 }
 
 void StartClient(){
-    Client *p_client = CreateClient("127.0.0.1", PORT, TCP, IPV4);
+    Socket *p_client = CreateClient("127.0.0.1", PORT, TCP, IPV4);
     ConnectClient(p_client);
-    SendStringMessage(p_client->socketfd, "Hello World");
+    SendStringMessage(p_client, "Hello World");
     DisposeClient(p_client);
 }
 

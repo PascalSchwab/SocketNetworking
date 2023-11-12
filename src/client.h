@@ -3,15 +3,10 @@
 
 #include "main.h"
 
-typedef struct{
-    int socketfd;
-    struct sockaddr_in *p_address;
-} Client;
+Socket* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamily family);
 
-Client* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamily family);
+void ConnectClient(Socket *p_client);
 
-void ConnectClient(Client *p_client);
-
-void DisposeClient(Client *p_client);
+void DisposeClient(Socket *p_client);
 
 #endif

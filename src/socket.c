@@ -27,13 +27,18 @@ struct sockaddr_in* CreateAddress(ProtocolFamily family, char *p_ipAddress, int 
     return p_address;
 }
 
-void DisposeSocket(int socketfd, struct sockaddr_in *p_address){
-    close(socketfd);
-    free(p_address);
+void DisposeSocket(Socket *p_socket){
+    close(p_socket->socketfd);
+    free(p_socket->p_address);
+    free(p_socket);
 }
 
-int SendStringMessage(int socketfd, char *p_message){
-    return send(socketfd, p_message, strlen(p_message), 0);
+void SendStringMessage(Socket *p_socket, char *p_message){
+    if(send(p_socket->socketfd, p_message, strlen(p_message), 0) < 0){
+        perror("Can't send message");
+        DisposeSocket(p_socket);
+        exit(ERROR);
+    }
 }
 
 int PackInt(int number){

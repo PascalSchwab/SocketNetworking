@@ -1,14 +1,14 @@
 #include "server.h"
 
-Server* CreateServer(int port, SocketType type, ProtocolFamily family){
-    Server *p_server = malloc(sizeof(Server));
+Socket* CreateServer(int port, SocketType type, ProtocolFamily family){
+    Socket *p_server = malloc(sizeof(Socket));
     p_server->socketfd = CreateSocket(family, type);
     p_server->p_address = CreateAddress(family, NULL, port);
     printf("Server was created\n");
     return p_server;
 }
 
-void SetServerOptions(Server *p_server){
+void SetServerOptions(Socket *p_server){
     int opt = 1;
     if(setsockopt(p_server->socketfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0){
         perror("Can't set socket opt");
@@ -17,7 +17,7 @@ void SetServerOptions(Server *p_server){
     }
 }
 
-void BindServerSocket(Server *p_server){
+void BindServerSocket(Socket *p_server){
     if(bind(p_server->socketfd, (struct sockaddr*)p_server->p_address, sizeof(*p_server->p_address)) < 0){
         perror("Bind socket to port failed");
         DisposeServer(p_server);
@@ -25,7 +25,7 @@ void BindServerSocket(Server *p_server){
     }
 }
 
-void ListenServer(Server *p_server, void (*callbackFunc)(char*)){
+void ListenServer(Socket *p_server, void (*callbackFunc)(char*)){
     // Listen
     if(listen(p_server->socketfd, MAX_CLIENTS) < 0){
         perror("Set socket into listen mode failed");
@@ -68,8 +68,7 @@ void* HandleClient(void *p){
     free(p_client);
 }
 
-void DisposeServer(Server *p_server){
-    DisposeSocket(p_server->socketfd, p_server->p_address);
-    free(p_server);
+void DisposeServer(Socket *p_server){
+    DisposeSocket(p_server);
     printf("Server was deleted\n");
 }
