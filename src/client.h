@@ -10,9 +10,7 @@ typedef struct{
 
 Client* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamily family);
 
-void Connect();
-
-void SendMessage(char *p_message);
+void ConnectClient(Client *p_client);
 
 void DisposeClient(Client *p_client);
 

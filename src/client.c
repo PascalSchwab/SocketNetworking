@@ -8,9 +8,9 @@ Client* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamil
     return p_client;
 }
 
-void Connect(Client *p_client){
+void ConnectClient(Client *p_client){
     if(connect(p_client->socketfd, (struct sockaddr *)p_client->p_address, sizeof(*(p_client->p_address))) < 0){
-        perror("Failed to connect to server\n");
+        perror("Failed to connect to server");
         DisposeClient(p_client);
         exit(ERROR);
     }

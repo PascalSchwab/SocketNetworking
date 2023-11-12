@@ -3,7 +3,7 @@
 int CreateSocket(ProtocolFamily family, SocketType type){
     int socketfd = socket(family, type, 0);
     if(socketfd < 0){
-        perror("Error by creating socket\n");
+        perror("Error by creating socket");
         exit(ERROR);
     }
     return socketfd;
@@ -19,7 +19,7 @@ struct sockaddr_in* CreateAddress(ProtocolFamily family, char *p_ipAddress, int 
     }
     else{
         if(inet_pton(family, p_ipAddress, &p_address->sin_addr) < 0){
-            perror("Invalid address\n");
+            perror("Invalid address");
             free(p_address);
             exit(ERROR);
         }
@@ -30,6 +30,15 @@ struct sockaddr_in* CreateAddress(ProtocolFamily family, char *p_ipAddress, int 
 void DisposeSocket(int socketfd, struct sockaddr_in *p_address){
     close(socketfd);
     free(p_address);
+}
+
+RecvStringMessage* RecieveStringMessage(int socketfd){
+    RecvStringMessage *p_result = malloc(sizeof(RecieveStringMessage));
+    p_result->exitCode = recv(socketfd, p_result->message, RECIEVE_BUFFER_SIZE, 0);
+}
+
+int SendStringMessage(int socketfd, char *p_message){
+    return send(socketfd, p_message, strlen(p_message), 0);
 }
 
 int PackInt(int number){
