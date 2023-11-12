@@ -1,7 +1,15 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+typedef enum{
+    TCP = SOCK_STREAM, UDP = SOCK_DGRAM
+} SocketType;
 
-#include "main.h"
+typedef enum{
+    IPV4 = AF_INET, IPV6 = AF_INET6, BLUETOOTH = AF_BLUETOOTH
+} ProtocolFamily;
+
+typedef struct{
+    int socketfd;
+    struct sockaddr_in *p_address;
+} Socket;
 
 #define RECIEVE_BUFFER_SIZE 1024
 
@@ -14,5 +22,3 @@ void DisposeSocket(Socket *p_socket);
 void SendStringMessage(Socket *p_socket, char *p_message);
 
 int PackInt(int number);
-
-#endif
