@@ -32,11 +32,6 @@ void DisposeSocket(int socketfd, struct sockaddr_in *p_address){
     free(p_address);
 }
 
-RecvStringMessage* RecieveStringMessage(int socketfd){
-    RecvStringMessage *p_result = malloc(sizeof(RecieveStringMessage));
-    p_result->exitCode = recv(socketfd, p_result->message, RECIEVE_BUFFER_SIZE, 0);
-}
-
 int SendStringMessage(int socketfd, char *p_message){
     return send(socketfd, p_message, strlen(p_message), 0);
 }

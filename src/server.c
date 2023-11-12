@@ -25,7 +25,7 @@ void BindServerSocket(Server *p_server){
     }
 }
 
-void ListenServer(Server *p_server){
+void ListenServer(Server *p_server, void (*callbackFunc)(char*)){
     // Listen
     if(listen(p_server->socketfd, MAX_CLIENTS) < 0){
         perror("Set socket into listen mode failed");
@@ -35,21 +35,41 @@ void ListenServer(Server *p_server){
 
     printf("Server is listenting. Waiting for connections...\n");
 
-    // Accept one incoming client
-    struct sockaddr_in connectionAddress;
-    int lengthOfAddress = sizeof(connectionAddress);
-    p_server->clientSocket = accept(p_server->socketfd, (struct sockaddr*)&connectionAddress, &lengthOfAddress);
+    while(1){
+        struct sockaddr_in clientAddress;
+        socklen_t clientAddressLen = sizeof(clientAddress);
+        int socketfd = accept(p_server->socketfd, (struct sockaddr*)&clientAddress, &clientAddressLen);
+        if(socketfd < 0){
+            perror("Can't accept incoming connection");
+            DisposeServer(p_server);
+            exit(ERROR);
+        }
 
-    if(p_server->clientSocket < 0){
-        perror("Can't accept incoming connection");
-        DisposeServer(p_server);
+        ServerClient *p_client = malloc(sizeof(ServerClient));
+        p_client->socketfd = socketfd;
+        p_client->callbackFunc = callbackFunc;
+        p_client->p_server;
+
+        pthread_t id;
+        pthread_create(&id, NULL, HandleClient, p_client);
+        pthread_join(id, NULL);
+    }
+}
+
+void* HandleClient(void *p){
+    ServerClient *p_client = (ServerClient*)p;
+    char message[RECIEVE_BUFFER_SIZE];
+    if(recv(p_client->socketfd, message, RECIEVE_BUFFER_SIZE, 0) < 0){
+        perror("Can't read message\n");
+        DisposeServer(p_client->p_server);
         exit(ERROR);
     }
+    p_client->callbackFunc(message);
+    free(p_client);
 }
 
 void DisposeServer(Server *p_server){
     DisposeSocket(p_server->socketfd, p_server->p_address);
     free(p_server);
-    close(p_server->clientSocket);
     printf("Server was deleted\n");
 }

@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <pthread.h>
 
 typedef enum{
     TCP = SOCK_STREAM, UDP = SOCK_DGRAM

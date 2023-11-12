@@ -8,8 +8,13 @@
 typedef struct{
     int socketfd;
     struct sockaddr_in *p_address;
-    int clientSocket;
 } Server;
+
+typedef struct{
+    Server *p_server;
+    int socketfd;
+    void (*callbackFunc)(char*);
+}ServerClient;
 
 Server* CreateServer(int port, SocketType type, ProtocolFamily family);
 
@@ -17,7 +22,9 @@ void BindServerSocket(Server *p_server);
 
 void SetServerOptions(Server *p_server);
 
-void ListenServer(Server *p_server);
+void ListenServer(Server *p_server, void (*callbackFunc)(char*));
+
+void* HandleClient(void *p);
 
 void DisposeServer(Server *p_server);
 

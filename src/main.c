@@ -1,24 +1,31 @@
 #include "main.h"
 
-int main(){
-    // Server
-    Server *p_server = CreateServer(5005, TCP, IPV4);
+#define PORT 5005
+
+void printMessage(char* message){
+    printf("%s\n", message);
+}
+
+void StartServer(){
+    Server *p_server = CreateServer(PORT, TCP, IPV4);
     SetServerOptions(p_server);
     BindServerSocket(p_server);
-    ListenServer(p_server);
-    RecvStringMessage *p_result = RecieveStringMessage(p_server->clientSocket);
-    if(p_result->exitCode < 0){
-        perror("Can't read message\n");
-        DisposeServer(p_server);
-        exit(ERROR);
-    }
-    printf("%s\n", p_result->message);
+    ListenServer(p_server, printMessage);
     DisposeServer(p_server);
+}
+
+void StartClient(){
+    Client *p_client = CreateClient("127.0.0.1", PORT, TCP, IPV4);
+    ConnectClient(p_client);
+    SendStringMessage(p_client->socketfd, "Hello World");
+    DisposeClient(p_client);
+}
+
+int main(){
+    // Server
+    StartServer();
 
     // Client
-    // Client *p_client = CreateClient("127.0.0.1", 5005, TCP, IPV4);
-    // ConnectClient(p_client);
-    // SendStringMessage(p_client->socketfd, "Hello World");
-    // DisposeClient(p_client);
+    // StartClient();
     return SUCCESS;
 }
