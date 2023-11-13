@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
 #include <sys/socket.h>
 #include <stdio.h>
@@ -13,8 +13,8 @@
 #define ERROR 1
 #define SUCCESS 0
 
-#include "socket.h"
-#include "client.h"
-#include "server.h"
+#include "src/socket.h"
+#include "src/client.h"
+#include "src/server.h"
 
 #endif

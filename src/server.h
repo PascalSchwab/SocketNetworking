@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "network.h"
+#include "../network.h"
 
 #define MAX_CLIENTS 10
 
