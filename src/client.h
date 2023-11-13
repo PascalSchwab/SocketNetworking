@@ -1,7 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../network.h"
+#include "main.h"
 
 Socket* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamily family);
 
