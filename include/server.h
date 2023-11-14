@@ -1,9 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "main.h"
-
 #define MAX_CLIENTS 10
+
+#include "socket.h"
 
 typedef struct{
     Socket *p_server;
@@ -19,7 +19,7 @@ void SetServerOptions(Socket *p_server);
 
 void ListenServer(Socket *p_server, void (*callbackFunc)(char*));
 
-void* HandleClient(void *p);
+static void* HandleClient(void *p);
 
 void DisposeServer(Socket *p_server);
 

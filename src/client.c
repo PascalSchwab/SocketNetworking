@@ -1,4 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+
 #include "client.h"
+#include "lib.h"
 
 Socket* CreateClient(char *p_ipAddress, int port, SocketType type, ProtocolFamily family){
     Socket *p_client = malloc(sizeof(Socket));

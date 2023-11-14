@@ -1,4 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <pthread.h>
+
 #include "server.h"
+#include "lib.h"
 
 Socket* CreateServer(int port, SocketType type, ProtocolFamily family){
     Socket *p_server = malloc(sizeof(Socket));

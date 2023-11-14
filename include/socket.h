@@ -1,3 +1,8 @@
+#ifndef SOCKET_H
+#define SOCKET_H
+
+#include <sys/socket.h>
+
 typedef enum{
     TCP = SOCK_STREAM, UDP = SOCK_DGRAM
 } SocketType;
@@ -22,3 +27,5 @@ void DisposeSocket(Socket *p_socket);
 void SendStringMessage(Socket *p_socket, char *p_message);
 
 int PackInt(int number);
+
+#endif
