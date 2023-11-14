@@ -1,6 +1,10 @@
 # SocketNetworking
 Library for Socket Programming in C
 
+# How to install
+    cd build
+    sudo make install
+
 # Server
     #include "network.h"
     #include <stdio.h>
