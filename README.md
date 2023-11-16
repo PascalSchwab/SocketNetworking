@@ -2,7 +2,10 @@
 Library for Socket Programming in C
 
 # How to install
+    mkdir build
     cd build
+    cmake ..
+    make
     sudo make install
 
 # Server
